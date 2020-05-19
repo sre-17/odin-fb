@@ -1,4 +1,5 @@
 <h1>Posts </h1>
+<h2>Hello, <%= current_user.name %>.</h2>
 <%= link_to "New Post" , new_post_path %>
 <%= link_to "Profile" , user_path(current_user) %>
 <%= link_to "Sign out" ,destroy_user_session_path, method: :delete %>
@@ -8,16 +9,27 @@
         <li><%= post.content %></li>
     </ul>
     
-    <%= form_with model: [post, post.comments.build] , local: true do |form| %>
-        <%= form.text_field :content %>
-        <%= form.submit "comment" %>
+<!--   Liking   -->
+    <p><%= "#{post.liked_users.count}  Likes  &   #{post.comments.count} Comments" %></p>
+    <% if post.liked_users.where("user_id = ?",current_user.id).empty? %>
+        <%= form_with model: [post, post.likes.build] , local: true do |form| %>
+            <%= form.submit "Like" %>
+        <% end %>
+        <% else %>
+            <% like = Like.where("user_id = ? AND post_id= ? " , current_user.id, post.id)[0] %>
+            <%= link_to "Unlike" , [post, like], method: :delete %>
     <% end %>
     
-        <p>Comments <p>
-        <% post.comments.all.each do |c| %>
-            
-            <p><%= "#{c.user.name} says : #{c.content}" %></p>
-        <% end %>
+<!--   Commenting   -->
+    <p>Comments <p>
+    <%= form_with model: [post, post.comments.build] , local: true do |form| %>
+        <%= form.text_area :content %>
+        <p><%= form.submit "Comment" %></p>
+    <% end %>
+    
+    <% post.comments.all.each do |c| %>
+        <p><%= "#{c.user.name} says : #{c.content}" %></p>
+    <% end %>
 
     <hr/>
 <% end %>

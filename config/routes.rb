@@ -3,7 +3,8 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   root "posts#index"
   resources :posts do 
-      resources :comments
+      resources :comments , only: :create
+      resources :likes , only: [:create,:destroy]
   end
   resources :users , only: :show
 end
