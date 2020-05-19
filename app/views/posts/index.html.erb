@@ -1,0 +1,23 @@
+<h1>Posts </h1>
+<%= link_to "New Post" , new_post_path %>
+<%= link_to "Profile" , user_path(current_user) %>
+<%= link_to "Sign out" ,destroy_user_session_path, method: :delete %>
+<% @posts.each do |post| %>
+    <p><%= post.user.name %> created: </p>
+    <ul>
+        <li><%= post.content %></li>
+    </ul>
+    
+    <%= form_with model: [post, post.comments.build] , local: true do |form| %>
+        <%= form.text_field :content %>
+        <%= form.submit "comment" %>
+    <% end %>
+    
+        <p>Comments <p>
+        <% post.comments.all.each do |c| %>
+            
+            <p><%= "#{c.user.name} says : #{c.content}" %></p>
+        <% end %>
+
+    <hr/>
+<% end %>
