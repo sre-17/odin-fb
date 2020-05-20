@@ -6,7 +6,7 @@
         <% next %>
     <% end %>
     <p>
-        <%= user.name %>&nbsp;
+        <%= user.name %>
         
         <% if not current_user.self_confirmings.where("friend_id = ?", user.id).empty? %>
             <%= "Friends" %>
@@ -21,9 +21,11 @@
             <%= "Requested" %>
             
         <% else %>
-            <%= "Request" %>
-            
+            <%= form_with model: [user , user.ic_requests.build] , local: true do |form| %>
+                <%= form.submit "Add Friend" %>
+            <% end %>
         <% end %>
+        
     </p>
     
 <% end %>
