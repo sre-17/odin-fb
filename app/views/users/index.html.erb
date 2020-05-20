@@ -1,0 +1,29 @@
+<h1>Users List </h1>
+<h2>Hello, <%= current_user.name %></h1>
+
+<% @users.each do |user| %>
+    <% if user.id == current_user.id %>
+        <% next %>
+    <% end %>
+    <p>
+        <%= user.name %>&nbsp;
+        
+        <% if not current_user.self_confirmings.where("friend_id = ?", user.id).empty? %>
+            <%= "Friends" %>
+            
+        <% elsif not current_user.they_confirmings.where("user_id = ? ", user.id).empty? %>
+            <%= "Friends" %>
+            
+        <% elsif not current_user.ic_requests.where("user_id = ?" , user.id).empty? %>
+            <%= "Confirm request" %>
+            
+        <% elsif not current_user.og_requests.where("to_user_id = ?" , user.id).empty? %>
+            <%= "Requested" %>
+            
+        <% else %>
+            <%= "Request" %>
+            
+        <% end %>
+    </p>
+    
+<% end %>
