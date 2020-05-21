@@ -10,12 +10,18 @@
         
         <% if not current_user.self_confirmings.where("friend_id = ?", user.id).empty? %>
             <%= "Friends" %>
+            <% friend = user.they_confirmings.find_by("user_id = ?" , current_user.id) %>
+            <%= link_to "Unfriend" , [user , friend], method: :delete , data: { confirm: "Unfriend ?" } %>
             
         <% elsif not current_user.they_confirmings.where("user_id = ? ", user.id).empty? %>
             <%= "Friends" %>
+            <% friend = user.self_confirmings.find_by("friend_id = ? " , current_user.id) %>
+            <%= link_to "Unfriend" , [user, friend] , method: :delete , data: { confirm: "Unfriend?" } %>
             
         <% elsif not current_user.ic_requests.where("user_id = ?" , user.id).empty? %>
-            <%= "Confirm request" %>
+            <%= form_with model: [user, user.self_confirmings.build] , local: true do |form| %>
+                <%= form.submit "Confirm request" %>
+            <% end %>
             
         <% elsif not current_user.og_requests.where("to_user_id = ?" , user.id).empty? %>
             <%= "Requested" %>

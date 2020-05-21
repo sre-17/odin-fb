@@ -8,4 +8,10 @@ class RequestsController < ApplicationController
             redirect_to users_path
         end
     end
+    
+    def destroy
+        @request = current_user.ic_requests.find(params[:id])
+        @request.destroy
+        redirect_to users_path
+    end
 end
