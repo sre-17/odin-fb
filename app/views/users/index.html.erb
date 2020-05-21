@@ -1,5 +1,7 @@
 <h1>Users List </h1>
 <h2>Hello, <%= current_user.name %></h1>
+<%= link_to "Home" , posts_path %>
+<%= link_to "Sign out" , destroy_user_session_path, method: :delete  %>
 
 <% @users.each do |user| %>
     <% if user.id == current_user.id %>
@@ -22,9 +24,13 @@
             <%= form_with model: [user, user.self_confirmings.build] , local: true do |form| %>
                 <%= form.submit "Confirm request" %>
             <% end %>
+            <% request = user.og_requests.find_by("to_user_id = ? " , current_user.id) %>
+            <%= link_to "Delete this request" , [user, request] , method: :delete , data: { confirm: "Delete request? " } %> 
             
         <% elsif not current_user.og_requests.where("to_user_id = ?" , user.id).empty? %>
             <%= "Requested" %>
+            <% request = user.ic_requests.find_by("user_id = ?" , current_user.id) %>
+            <%= link_to "Undo Request" , [user, request] , method: :delete , data: { confirm: "Delete request? " } %>
             
         <% else %>
             <%= form_with model: [user , user.ic_requests.build] , local: true do |form| %>
